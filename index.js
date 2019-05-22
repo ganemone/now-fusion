@@ -8,6 +8,7 @@ const {
   runPackageJsonScript,
   FileBlob,
 } = require('@now/build-utils');
+const fs = require('fs');
 
 // build({
 //   files: Files,
@@ -31,8 +32,8 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
   await runNpmInstall(entrypointFsDirname, ['--frozen-lockfile']);
   await runPackageJsonScript(entrypointFsDirname, 'now-build');
   const entrypointPath = downloadedFiles[entrypoint].fsPath;
-  const files = fs.readdirSync('.fusion');
-  console.log('FILES', files);
+  const fusionFiles = fs.readdirSync('.fusion');
+  console.log('FILES', fusionFiles);
   const lambda = await createLambda({
     runtime: 'nodejs8.10',
     handler: 'index.main',
