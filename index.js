@@ -9,6 +9,7 @@ const {
   FileBlob,
 } = require('@now/build-utils');
 const fs = require('fs');
+const readdir = require('fs-readdir-recursive');
 
 // build({
 //   files: Files,
@@ -32,8 +33,16 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
   await runNpmInstall(entrypointFsDirname, ['--frozen-lockfile']);
   await runPackageJsonScript(entrypointFsDirname, 'now-build');
   const entrypointPath = downloadedFiles[entrypoint].fsPath;
-  const fusionFiles = fs.readdirSync(entrypointFsDirname);
-  console.log('FILES', fusionFiles);
+  const fusionFiles = readdir(join(entrypointFsDirname, '.fusion')).reduce(
+    (obj, file) => {
+      const filePath = join(entrypointFsDirname, '.fusion', file);
+      obj[filePath] = new FileBlob({
+        data: fs.readFileSync(filePath).toString(),
+      });
+      return obj;
+    },
+    {}
+  );
   const lambda = await createLambda({
     runtime: 'nodejs8.10',
     handler: 'index.main',
@@ -51,6 +60,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
         };
         `,
       }),
+      ...fusionFiles,
     },
   });
 

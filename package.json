@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@now/build-utils": "^0.5.5"
+    "@now/build-utils": "^0.5.5",
+    "fs-readdir-recursive": "^1.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
