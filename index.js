@@ -1,4 +1,14 @@
-import { join, dirname, sep } from 'path';
+// @flow
+/* eslint-env node */
+const {join, dirname} = require('path');
+const {
+  download,
+  runNpmInstall,
+  createLambda,
+  runPackageJsonScript,
+  FileBlob,
+} = require('@now/build-utils');
+
 // build({
 //   files: Files,
 //   entrypoint: String,
@@ -15,27 +25,43 @@ import { join, dirname, sep } from 'path';
 //   output: Files output,
 //   routes: Object
 // }
-exports.build = async ({
-  files, entrypoint, workPath, config, meta = {},
-}) => {
-  console.log('downloading user files...');
+exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
   const downloadedFiles = await download(files, workPath, meta);
-
-  console.log("installing dependencies for user's code...");
   const entrypointFsDirname = join(workPath, dirname(entrypoint));
   await runNpmInstall(entrypointFsDirname, ['--frozen-lockfile']);
-
+  await runPackageJsonScript(entrypointFsDirname, 'now-build');
   const entrypointPath = downloadedFiles[entrypoint].fsPath;
-  return { entrypointPath, entrypointFsDirname };
-};
+  console.log('entrypointPath', entrypointPath);
+  console.log('__dirname', __dirname);
+  console.log('cwd', process.cwd());
+  const lambda = await createLambda({
+    runtime: 'nodejs8.10',
+    handler: 'index.main',
+    files: {
+      'index.js': new FileBlob({
+        data: `
+        const fs = require('fs');
+        exports.main = (req, res) => {
+          try {
+            console.log('dirname', fs.readdirSync(__dirname));
+            console.log('cwd', fs.readdirSync(process.cwd()));
+            console.log('.fusion', fs.readdirSync('.fusion/'));
+          } catch(e) {}
+          res.end('OK'); 
+        };
+        `,
+      }),
+    },
+  });
 
-async function downloadInstallAndBundle({
-  files,
-  entrypoint,
-  workPath,
-  meta,
-}: DownloadOptions) {
-}
+  return {
+    output: {
+      [entrypoint]: lambda,
+    },
+    watch: [],
+    routes: {},
+  };
+};
 
 // prepareCache({
 //   files: Files,
