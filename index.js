@@ -31,9 +31,8 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
   await runNpmInstall(entrypointFsDirname, ['--frozen-lockfile']);
   await runPackageJsonScript(entrypointFsDirname, 'now-build');
   const entrypointPath = downloadedFiles[entrypoint].fsPath;
-  console.log('entrypointPath', entrypointPath);
-  console.log('__dirname', __dirname);
-  console.log('cwd', process.cwd());
+  const files = fs.readdirSync('.fusion');
+  console.log('FILES', files);
   const lambda = await createLambda({
     runtime: 'nodejs8.10',
     handler: 'index.main',
