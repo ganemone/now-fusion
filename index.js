@@ -35,9 +35,10 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
   const entrypointPath = downloadedFiles[entrypoint].fsPath;
   const fusionFiles = readdir(join(entrypointFsDirname, '.fusion')).reduce(
     (obj, file) => {
-      const filePath = join(entrypointFsDirname, '.fusion', file);
-      obj[filePath] = new FileBlob({
-        data: fs.readFileSync(filePath).toString(),
+      const relativePath = join('.fusion', file);
+      const absolutePath = join(entrypointFsDirname, relativePath);
+      obj[relativePath] = new FileBlob({
+        data: fs.readFileSync(absolutePath).toString(),
       });
       return obj;
     },
