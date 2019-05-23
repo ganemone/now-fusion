@@ -51,7 +51,6 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
       'index.js': new FileBlob({
         data: `
         exports.main = (req, res) => {
-          res.status(201);
           res.send('OK'); 
         };
         `,
