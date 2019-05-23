@@ -49,11 +49,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
     handler: 'index.main',
     files: {
       'index.js': new FileBlob({
-        data: `
-        exports.main = (req, res) => {
-          res.send('OK'); 
-        };
-        `,
+        data: `const getHandler = require('fusion-cli/serverless');module.exports = getHandler({});`,
       }),
       ...fusionFiles,
     },
