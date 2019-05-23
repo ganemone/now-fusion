@@ -50,14 +50,9 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
     files: {
       'index.js': new FileBlob({
         data: `
-        const fs = require('fs');
         exports.main = (req, res) => {
-          try {
-            console.log('dirname', fs.readdirSync(__dirname));
-            console.log('cwd', fs.readdirSync(process.cwd()));
-            console.log('.fusion', fs.readdirSync('.fusion/'));
-          } catch(e) {}
-          res.end('OK'); 
+          res.status(201);
+          res.send('OK'); 
         };
         `,
       }),
