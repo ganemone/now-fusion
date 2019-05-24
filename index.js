@@ -54,7 +54,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
         exports.main = getHandler({});
       `,
       }),
-      ...fusionFiles,
+      // ...fusionFiles,
     },
   });
 
