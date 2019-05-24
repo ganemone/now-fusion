@@ -51,7 +51,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
       'index.js': new FileBlob({
         data: `
         const getHandler = require('fusion-cli/serverless');
-        module.exports = getHandler({});
+        exports.main = getHandler({});
       `,
       }),
       ...fusionFiles,
