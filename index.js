@@ -30,42 +30,41 @@ const readdir = require('fs-readdir-recursive');
 exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
   const downloadedFiles = await download(files, workPath, meta);
   const entrypointFsDirname = join(workPath, dirname(entrypoint));
-  try {
-    await runNpmInstall(entrypointFsDirname, ['--frozen-lockfile']);
-    await runPackageJsonScript(entrypointFsDirname, 'now-build');
-    const entrypointPath = downloadedFiles[entrypoint].fsPath;
-    const fusionFiles = readdir(join(entrypointFsDirname, '.fusion')).reduce(
-      (obj, file) => {
-        const relativePath = join('.fusion', file);
-        const absolutePath = join(entrypointFsDirname, relativePath);
-        obj[relativePath] = new FileBlob({
-          data: fs.readFileSync(absolutePath).toString(),
-        });
-        return obj;
-      },
-      {}
-    );
-    const lambda = await createLambda({
-      runtime: 'nodejs8.10',
-      handler: 'index.main',
-      files: {
-        'index.js': new FileBlob({
-          data: `const getHandler = require('fusion-cli/serverless');module.exports = getHandler({});`,
-        }),
-        ...fusionFiles,
-      },
-    });
+  // await runNpmInstall(entrypointFsDirname, ['--frozen-lockfile']);
+  // await runPackageJsonScript(entrypointFsDirname, 'now-build');
+  // const entrypointPath = downloadedFiles[entrypoint].fsPath;
+  // const fusionFiles = readdir(join(entrypointFsDirname, '.fusion')).reduce(
+  //   (obj, file) => {
+  //     const relativePath = join('.fusion', file);
+  //     const absolutePath = join(entrypointFsDirname, relativePath);
+  //     obj[relativePath] = new FileBlob({
+  //       data: fs.readFileSync(absolutePath).toString(),
+  //     });
+  //     return obj;
+  //   },
+  //   {}
+  // );
+  const lambda = await createLambda({
+    runtime: 'nodejs8.10',
+    handler: 'index.main',
+    files: {
+      'index.js': new FileBlob({
+        data: `
+        const getHandler = require('fusion-cli/serverless');
+        module.exports = getHandler({});
+      `,
+      }),
+      // ...fusionFiles,
+    },
+  });
 
-    return {
-      output: {
-        [entrypoint]: lambda,
-      },
-      watch: [],
-      routes: {},
-    };
-  } catch (e) {
-    console.log('caught error', e);
-  }
+  return {
+    output: {
+      [entrypoint]: lambda,
+    },
+    watch: [],
+    routes: {},
+  };
 };
 
 // prepareCache({
