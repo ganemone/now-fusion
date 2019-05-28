@@ -44,11 +44,12 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
   //   },
   //   {}
   // );
+  console.log('entrypoint', entrypoint);
   const lambda = await createLambda({
     runtime: 'nodejs8.10',
     handler: 'index.main',
     files: {
-      'index.js': new FileBlob({
+      [entrypoint]: new FileBlob({
         data: `
         exports.main = (req, res) => {
           res.send('OK');
@@ -58,13 +59,8 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
       // ...fusionFiles,
     },
   });
-
   return {
-    output: {
-      'index.js': lambda,
-    },
-    watch: [],
-    routes: {},
+    [entrypoint]: lambda,
   };
 };
 
