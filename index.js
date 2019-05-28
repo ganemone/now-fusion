@@ -61,7 +61,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
 
   return {
     output: {
-      [entrypoint]: lambda,
+      'index.js': lambda,
     },
     watch: [],
     routes: {},
