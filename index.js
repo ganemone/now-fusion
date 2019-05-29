@@ -1,8 +1,8 @@
 // @flow
 /* eslint-env node */
 const {join, dirname} = require('path');
+const glob = require('@now/build-utils/fs/glob.js'); // eslint-disable-line import/no-extraneous-dependencies
 const {
-  glob,
   download,
   runNpmInstall,
   createLambda,
