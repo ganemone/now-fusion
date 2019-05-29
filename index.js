@@ -54,19 +54,13 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
         data: `
         const fs = require('fs');
         exports.main = (req, res) => {
-          console.log('cwd', process.cwd());
-          console.log('__dirname', __dirname);
-          console.log('fusion-cli', require.resolve('fusion-cli/serverless'));
-          console.log('source-map-support', require.resolve('source-map-support/source-map-support.js'));
           const getHandler = require('fusion-cli/serverless');
           const handler = getHandler();
           return handler(req, res);
         }
       `,
       }),
-      ...(await glob('package.json', inputDir)),
       ...(await glob('.fusion/**', inputDir)),
-      ...(await glob('node_modules/**', inputDir)),
     },
   });
   return {
