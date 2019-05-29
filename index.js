@@ -1,8 +1,8 @@
 // @flow
 /* eslint-env node */
 const {join, dirname} = require('path');
-const glob = require('@now/build-utils/fs/glob.js'); // eslint-disable-line import/no-extraneous-dependencies
 const {
+  glob,
   download,
   runNpmInstall,
   createLambda,
@@ -46,25 +46,6 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
   //   },
   //   {}
   // );
-  const includeFiles = ['.fusion/**', 'node_modules/**'];
-  const assets = {};
-  for (const pattern of includeFiles) {
-    // eslint-disable-next-line no-await-in-loop
-    const files = await glob(pattern, inputDir);
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const assetName of Object.keys(files)) {
-      const stream = files[assetName].toStream();
-      const {mode} = files[assetName];
-      // eslint-disable-next-line no-await-in-loop
-      const {data} = await FileBlob.fromStream({stream});
-
-      assets[assetName] = {
-        source: data,
-        permissions: mode,
-      };
-    }
-  }
   const lambda = await createLambda({
     runtime: 'nodejs8.10',
     handler: 'index.main',
@@ -81,7 +62,8 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
         }
       `,
       }),
-      ...assets,
+      ...(await glob('.fusion/**', inputDir)),
+      ...(await glob('node_modules/**', inputDir)),
     },
   });
   return {
