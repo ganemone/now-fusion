@@ -54,6 +54,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
         data: `
         const fs = require('fs');
         exports.main = (req, res) => {
+          const sourceMapSupport = require('source-map-support/source-map-support.js');
           const getHandler = require('fusion-cli/serverless');
           const handler = getHandler();
           return handler(req, res);
