@@ -60,6 +60,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
         }
       `,
       }),
+      ...(await glob('node_modules/fusion-cli/serverless.js', inputDir)),
       ...(await glob('.fusion/**', inputDir)),
     },
   });
