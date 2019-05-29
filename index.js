@@ -50,11 +50,12 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
     files: {
       [entrypoint]: new FileBlob({
         data: `
-        const getHandler = require('fusion-cli/serverless');
-        const handler = getHandler();
+        // const getHandler = require('fusion-cli/serverless');
+        // const handler = getHandler();
         exports.main = (req, res) => {
           console.log('received request', req.url);
-          return handler(req, res);
+          throw new Error('unimplemented');
+          // return handler(req, res);
         }
       `,
       }),
