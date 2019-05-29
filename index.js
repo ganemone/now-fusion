@@ -54,8 +54,8 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
         data: `
         const fs = require('fs');
         exports.main = (req, res) => {
-          console.log('dirs', fs.readdirSync('.'));
-          console.log('received request', req.url);
+          console.log('dirs', fs.readdirSync('node_modules'));
+          console.log('received request');
           const getHandler = require('fusion-cli/serverless');
           const handler = getHandler();
           return handler(req, res);
