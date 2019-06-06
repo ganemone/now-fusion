@@ -37,9 +37,9 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
   const inputDir = dirname(entrypointPath);
   const lambda = await createLambda({
     runtime: 'nodejs8.10',
-    handler: 'src/main.main',
+    handler: 'index.main',
     files: {
-      'src/main.js': new FileBlob({
+      [entrypoint]: new FileBlob({
         data: `
         const fs = require('fs');
         const getHandler = require('fusion-cli/serverless');
@@ -54,7 +54,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
     },
   });
   return {
-    'src/main.js': lambda,
+    [entrypoint]: lambda,
   };
 };
 
