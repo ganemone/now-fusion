@@ -35,17 +35,6 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
   await runPackageJsonScript(entrypointFsDirname, 'now-build');
   const entrypointPath = downloadedFiles[entrypoint].fsPath;
   const inputDir = dirname(entrypointPath);
-  // const fusionFiles = readdir(join(entrypointFsDirname, '.fusion')).reduce(
-  //   (obj, file) => {
-  //     const relativePath = join('.fusion', file);
-  //     const absolutePath = join(entrypointFsDirname, relativePath);
-  //     obj[relativePath] = new FileBlob({
-  //       data: fs.readFileSync(absolutePath).toString(),
-  //     });
-  //     return obj;
-  //   },
-  //   {}
-  // );
   const lambda = await createLambda({
     runtime: 'nodejs8.10',
     handler: 'index.main',
