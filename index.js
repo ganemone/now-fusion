@@ -39,7 +39,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
     runtime: 'nodejs8.10',
     handler: 'index.main',
     files: {
-      [entrypoint]: new FileBlob({
+      'index.js': new FileBlob({
         data: `
         const fs = require('fs');
         exports.main = (req, res) => {
@@ -54,7 +54,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
     },
   });
   return {
-    [entrypoint]: lambda,
+    'index.js': lambda,
   };
 };
 
