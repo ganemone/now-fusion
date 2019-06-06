@@ -37,7 +37,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
   const inputDir = dirname(entrypointPath);
   const lambda = await createLambda({
     runtime: 'nodejs8.10',
-    handler: 'launcher.main',
+    handler: 'src/main.main',
     files: {
       'src/main.js': new FileBlob({
         data: `
