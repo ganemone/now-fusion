@@ -45,6 +45,9 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
         const getHandler = require('fusion-cli/serverless');
         const handler = getHandler();
         exports.main = (req, res) => {
+          console.log('REQ', req);
+          console.log('RES', res);
+          console.log('HEADERS', req.headers);
           return handler(req, res);
         }
       `,
