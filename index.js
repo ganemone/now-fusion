@@ -62,8 +62,11 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
   await runPackageJsonScript(entrypointFsDirname, 'now-build');
   const entrypointPath = downloadedFiles[entrypoint].fsPath;
   const inputDir = dirname(entrypointPath);
-  await spawnAsync('rm', ['-rf', 'node_modules']);
-  await spawnAsync('rm', ['yarn.lock', 'package.json']);
+  // await spawnAsync('rm', ['-rf', join(entrypointFsDirname, 'node_modules')]);
+  // await spawnAsync('rm', [
+  //   join(entrypointFsDirname, 'yarn.lock'),
+  //   join(entrypointFsDirname, 'package.json'),
+  // ]);
   await spawnAsync('yarn', ['add', 'fusion-cli', 'aws-serverless-express']);
   const lambda = await createLambda({
     runtime: 'nodejs8.10',
@@ -82,7 +85,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
         }
       `,
       }),
-      ...(await glob('node_modules/**', inputDir)),
+      ...(await glob('node_modules/**', process.cwd())),
       ...(await glob('.fusion/**', inputDir)),
     },
   });
