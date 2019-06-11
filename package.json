@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@now/build-utils": "^0.5.5"
+    "@now/build-utils": "^0.5.5",
+    "aws-serverless-express": "^3.3.6"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
