@@ -8,6 +8,7 @@ const {
   createLambda,
   runPackageJsonScript,
   FileBlob,
+  spawnAsync,
 } = require('@now/build-utils');
 // const fs = require('fs');
 // const readdir = require('fs-readdir-recursive');
@@ -35,24 +36,23 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
   await runPackageJsonScript(entrypointFsDirname, 'now-build');
   const entrypointPath = downloadedFiles[entrypoint].fsPath;
   const inputDir = dirname(entrypointPath);
+  await spawnAsync('rm', ['-rf', 'node_modules']);
+  await spawnAsync('rm', ['yarn.lock', 'package.json']);
+  await spawnAsync('yarn', ['add', 'fusion-cli', 'aws-serverless-express']);
   const lambda = await createLambda({
     runtime: 'nodejs8.10',
     handler: 'index.main',
     files: {
       [entrypoint]: new FileBlob({
         data: `
-        try {
-          const fs = require('fs');
-          const getHandler = require('fusion-cli/serverless');
-          const {createServer, proxy} = require('aws-serverless-express');
-          const handler = getHandler();
-          const server = createServer(handler);
-          exports.main = (...args) => {
-            console.log('args', args);
-            return proxy(server, ...args);
-          }
-        } catch(e) {
-          console.log('ERROR', e);
+        const fs = require('fs');
+        const getHandler = require('fusion-cli/serverless');
+        const {createServer, proxy} = require('aws-serverless-express');
+        const handler = getHandler();
+        const server = createServer(handler);
+        exports.main = (...args) => {
+          console.log('args', args);
+          return proxy(server, ...args);
         }
       `,
       }),
