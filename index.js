@@ -79,7 +79,8 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
         const {createServer, proxy} = require('aws-serverless-express');
         const handler = getHandler();
         const server = createServer((req, res) => {
-          console.log('headers', req.headers);
+          req.headers['accept'] = 'text/html';
+          req.method = 'GET';
           return handler(req, res);
         });
         exports.main = (event, context) => {
