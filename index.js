@@ -105,7 +105,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
 //   config: Object
 // }) : Files cacheOutput
 
-export function shouldServe({
+exports.shouldServe = function shouldServe({
   entrypoint,
   files,
   config,
@@ -113,6 +113,6 @@ export function shouldServe({
   workPath,
 }) {
   return true;
-}
+};
 
 exports.version = 2;
