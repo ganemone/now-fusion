@@ -90,10 +90,10 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@now/build-utils@^0.5.5":
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/@now/build-utils/-/build-utils-0.5.5.tgz#cd47b61a3b8f7964fd4b390d07ee1d319cc3d4c5"
-  integrity sha512-OreZsiY7Ng8PKBWB7RTPV/nkjpZIYwacDd84s602wKlanbAnFyOSOMAXOM+N8DIusnkZU6yIE1BcdIc0KP5Siw==
+"@now/build-utils@^0.5.7":
+  version "0.5.7"
+  resolved "https://unpm.uberinternal.com/@now%2fbuild-utils/-/build-utils-0.5.7.tgz#ba671f2d2f88fe6e87ccf2897d6f52f71b2f404f"
+  integrity sha512-jtq6mW9ODe+rkhmN+eFciB3NZ1qxzxAF3MxzoAAUT7Yjpv7bAke6mQJ68bE7OZgRVG9B81TAa4/Tq+MTOvTXeQ==
   dependencies:
     "@types/cross-spawn" "6.0.0"
     async-retry "1.2.3"

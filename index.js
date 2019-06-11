@@ -8,10 +8,36 @@ const {
   createLambda,
   runPackageJsonScript,
   FileBlob,
-  spawnAsync,
 } = require('@now/build-utils');
+const {spawn} = require('child_process');
 // const fs = require('fs');
 // const readdir = require('fs-readdir-recursive');
+
+function spawnAsync(command, args, cwd, opts = {}) {
+  return new Promise((resolve, reject) => {
+    const stderrLogs = [];
+    opts = {stdio: 'inherit', cwd, ...opts};
+    const child = spawn(command, args, opts);
+
+    if (opts.stdio === 'pipe') {
+      child.stderr.on('data', data => stderrLogs.push(data));
+    }
+
+    child.on('error', reject);
+    child.on('close', (code, signal) => {
+      if (code === 0) {
+        return resolve();
+      }
+
+      const errorLogs = stderrLogs.map(line => line.toString()).join('');
+      if (opts.stdio !== 'inherit') {
+        reject(new Error(`Exited with ${code || signal}\n${errorLogs}`));
+      } else {
+        reject(new Error(`Exited with ${code || signal}`));
+      }
+    });
+  });
+}
 
 // build({
 //   files: Files,
