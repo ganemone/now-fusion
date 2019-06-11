@@ -78,7 +78,12 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
         const getHandler = require('fusion-cli/serverless');
         const {createServer, proxy} = require('aws-serverless-express');
         const handler = getHandler();
-        const server = createServer(handler);
+        const server = createServer((req, res) => {
+          console.log('handler', handler);
+          console.log('req', req);
+          console.log('res', 'res');
+          res.end('OK');
+        });
         exports.main = (...args) => {
           console.log('args', args);
           return proxy(server, ...args);
