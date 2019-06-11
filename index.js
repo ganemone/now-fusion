@@ -41,15 +41,18 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
     files: {
       [entrypoint]: new FileBlob({
         data: `
-        // const fs = require('fs');
-        // const getHandler = require('fusion-cli/serverless');
-        // const {createServer, proxy} = require('aws-serverless-express');
-        // const handler = getHandler();
-        // const server = createServer(handler);
-        exports.main = (...args) => {
+        try {
+          const fs = require('fs');
+          const getHandler = require('fusion-cli/serverless');
+          const {createServer, proxy} = require('aws-serverless-express');
+          const handler = getHandler();
+          const server = createServer(handler);
+          exports.main = (...args) => {
             console.log('args', args);
-            throw new Error('FAIL');
-          // return proxy(server, ...args);
+            return proxy(server, ...args);
+          }
+        } catch(e) {
+          console.log('ERROR', e);
         }
       `,
       }),
