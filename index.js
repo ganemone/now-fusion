@@ -53,7 +53,7 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
         }
       `,
       }),
-      // ...(await glob('node_modules/**', inputDir)),
+      ...(await glob('node_modules/**', inputDir)),
       ...(await glob('.fusion/**', inputDir)),
     },
   });
