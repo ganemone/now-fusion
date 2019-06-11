@@ -80,13 +80,10 @@ exports.build = async ({files, entrypoint, workPath, config, meta = {}}) => {
         const handler = getHandler();
         const server = createServer((req, res) => {
           console.log('handler', handler);
-          console.log('req', req);
-          console.log('res', 'res');
           res.end('OK');
         });
-        exports.main = (...args) => {
-          console.log('args', args);
-          return proxy(server, ...args);
+        exports.main = (event, context) => {
+          return proxy(server, event, context);
         }
       `,
       }),
